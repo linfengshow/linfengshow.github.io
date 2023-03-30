@@ -4,7 +4,20 @@
   
     
     <entry>
-      <title>java笔记</title>
+      <title>驴のSpringBoot学习笔记</title>
+      <link href="/2023/03/30/SpringBoot/"/>
+      <url>/2023/03/30/SpringBoot/</url>
+      
+        <content type="html"><![CDATA[<h1 id="驴のSpringBoot学习笔记"><a href="#驴のSpringBoot学习笔记" class="headerlink" title="驴のSpringBoot学习笔记"></a>驴のSpringBoot学习笔记</h1><blockquote><p>部分资料来自于黑马程序员</p></blockquote><h2 id="1-SpringBoot入门"><a href="#1-SpringBoot入门" class="headerlink" title="1.SpringBoot入门"></a>1.SpringBoot入门</h2><h3 id="1-1在idea创建SpringBoot"><a href="#1-1在idea创建SpringBoot" class="headerlink" title="1.1在idea创建SpringBoot"></a>1.1在idea创建SpringBoot</h3><p><img src="https://cdn.jsdelivr.net/gh/linfengshow/pictures@main/image-20211116125259385.png"></p><blockquote><p>如图所示在项目中创建新的模块，模块选择Spring Init ,特别提醒注意自己的SDK版本号（我是jdk8），然后正常的起名字，type选择maven，java版本选择你的版本（我是8）然后next</p></blockquote><p><img src="https://cdn.jsdelivr.net/gh/linfengshow/pictures@main/image-20211116125615728.png"></p><p>这里勾选Web，上方的springboot默认就好</p><h3 id="1-2尝试创建一个开发控制器"><a href="#1-2尝试创建一个开发控制器" class="headerlink" title="1.2尝试创建一个开发控制器"></a>1.2尝试创建一个开发控制器</h3><p>创建java文件（SB是springBoot缩写）</p><p><img src="https://cdn.jsdelivr.net/gh/linfengshow/pictures@main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-30%20175742.png"></p><p>尝试写一段代码</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/books&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SB</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">get</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="1-3运行"><a href="#1-3运行" class="headerlink" title="1.3运行"></a>1.3运行</h3><h4 id="可能出现的错误："><a href="#可能出现的错误：" class="headerlink" title="可能出现的错误："></a>可能出现的错误：</h4><p>无效的发行版：</p><p><img src="https://img-blog.csdnimg.cn/img_convert/6abb14653df046d1f10eac63c333e6d0.png"></p><p>[^此图来自csdn：<a href="https://blog.csdn.net/booker009/article/details/129648180]">https://blog.csdn.net/booker009/article/details/129648180]</a>: </p><p>意味着你idea中的java版本设置与springboot不一致，需要做两步：</p><p>1.Project Structure Modules&#x2F;Project选择你的项目（以及父级项目，如果有的话）-&gt;选择8（你的jdk版本），如图</p><p><img src="https://img-blog.csdnimg.cn/img_convert/742a24f71d1d442d53fb01cafb979dca.png"></p><p>2.Setting： 2.查找java compiler-&gt;Target bytecode version</p><p><img src="https://cdn.jsdelivr.net/gh/linfengshow/pictures@main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-30%20180532.png"></p><p>再次运行就好了</p><p>另外如果报错说你的8080接口被占用，可以在application.properties中重新配置TomCat端口</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//输入以下代码</span></span><br><span class="line">server.port:你想要的端口号</span><br></pre></td></tr></table></figure><p>成功：</p><p><img src="https://cdn.jsdelivr.net/gh/linfengshow/pictures@main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-03-30%20181438.png"></p><p>然后在浏览器的地址栏里输入：</p><blockquote><p>localhost&#x2F;books</p></blockquote><p>即可访问刚刚编写的控制器</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>java入门笔记</title>
       <link href="/2023/03/27/java/"/>
       <url>/2023/03/27/java/</url>
       
