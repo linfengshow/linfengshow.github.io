@@ -4,6 +4,27 @@
   
     
     <entry>
+      <title>MySQL基础</title>
+      <link href="/2023/05/31/MySQL%E5%9F%BA%E7%A1%80/"/>
+      <url>/2023/05/31/MySQL%E5%9F%BA%E7%A1%80/</url>
+      
+        <content type="html"><![CDATA[<h1 id="MySQL-amp-JavaWebの驴"><a href="#MySQL-amp-JavaWebの驴" class="headerlink" title="MySQL&amp;JavaWebの驴"></a>MySQL&amp;JavaWebの驴</h1><h2 id="1-基本语法"><a href="#1-基本语法" class="headerlink" title="1.基本语法"></a>1.基本语法</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312200700.png" alt="屏幕截图 2023-03-06 203314"></p><h3 id="SQL分类"><a href="#SQL分类" class="headerlink" title="SQL分类"></a>SQL分类</h3><blockquote><p>DDL:针对数据库和表的增删改</p><p>DML：对单个表的数据进行增删改</p><p>DQL：查询表中数据</p><p>DCL：对数据库进行权限控制</p></blockquote><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE db1(##创建表</span><br><span class="line">id int,##注意名在前，变量类型在后</span><br><span class="line">name varchar(10),</span><br><span class="line">age int,</span><br><span class="line">birth DATE);</span><br></pre></td></tr></table></figure><h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM db1;</span><br><span class="line">##SELECT `name` FROM db1;也可以单独查询一列</span><br></pre></td></tr></table></figure><h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DROP TABLE db1;</span><br><span class="line">##因为无法确定要删除的表是否存在，所以有更规范的写法：</span><br><span class="line">DROP TABLE if EXISTS db1；</span><br></pre></td></tr></table></figure><h3 id="表，列操作"><a href="#表，列操作" class="headerlink" title="表，列操作"></a>表，列操作</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE db1 RENAME TO stu;##表重命名</span><br><span class="line">ALTER TABLE stu ADD gender char(1);##添加列</span><br><span class="line">ALTER TABLE stu CHANGE gender sex char(1);##改列名</span><br><span class="line">ALTER TABLE stu DROP sex;##删除列</span><br></pre></td></tr></table></figure><h3 id="查询所有"><a href="#查询所有" class="headerlink" title="查询所有"></a>查询所有</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM stu;</span><br></pre></td></tr></table></figure><h3 id="添加数据"><a href="#添加数据" class="headerlink" title="添加数据"></a>添加数据</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">INSERT into stu VALUES(1,&#x27;林峰&#x27;,20,&#x27;2002-12-17&#x27;);##全添加不用标</span><br><span class="line">INSERT INTO stu(id,name,age) VALUES (1,&#x27;小明&#x27;,20);##指明添加位置</span><br></pre></td></tr></table></figure><h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UPDATE stu set birth = &#x27;1999-10-15&#x27; WHERE name = &#x27;小明&#x27;;</span><br></pre></td></tr></table></figure><h3 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from db1 where name = &#x27;小明&#x27;;</span><br></pre></td></tr></table></figure><h2 id="2-查询"><a href="#2-查询" class="headerlink" title="2.查询"></a>2.查询</h2><h3 id="基础查询"><a href="#基础查询" class="headerlink" title="基础查询"></a>基础查询</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--基础查询</span><br><span class="line">SELECT name FROM stu;</span><br></pre></td></tr></table></figure><h3 id="去重"><a href="#去重" class="headerlink" title="去重"></a>去重</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--去重</span><br><span class="line">SELECT DISTINCT name FROM stu;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312201120.png" alt="屏幕截图 2023-03-07 195316"></p><h3 id="输出结果时起别名"><a href="#输出结果时起别名" class="headerlink" title="输出结果时起别名"></a>输出结果时起别名</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--别名，as可省略</span><br><span class="line">SELECT id,name,age as 年龄,birth 生日 FROM stu;</span><br></pre></td></tr></table></figure><h3 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h3><p>条件：</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312202759.png" alt="屏幕截图 2023-03-07 200024-1678190500305"></p><p>例子：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--输出年龄大于等于20的人</span><br><span class="line">SELECT name FROM stu where age &gt;= 20;</span><br></pre></td></tr></table></figure><h3 id="x3D-x3D-模糊查询-x3D-x3D"><a href="#x3D-x3D-模糊查询-x3D-x3D" class="headerlink" title="&#x3D;&#x3D;模糊查询&#x3D;&#x3D;"></a>&#x3D;&#x3D;模糊查询&#x3D;&#x3D;</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--模糊查询</span><br><span class="line">--_:代表任意一个字符</span><br><span class="line">--%:代表任意多个字符</span><br><span class="line">SELECT * FROM stu WHERE name like &#x27;%小%&#x27;;</span><br></pre></td></tr></table></figure><h3 id="排序查找"><a href="#排序查找" class="headerlink" title="排序查找"></a>排序查找</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">--排序查找</span><br><span class="line">SELECT * FROM stu ORDER BY age ASC;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312203834.png" alt="屏幕截图 2023-03-07 201909"></p><h3 id="聚合函数和查找"><a href="#聚合函数和查找" class="headerlink" title="聚合函数和查找"></a>聚合函数和查找</h3><p>聚合函数：</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312204496.png" alt="屏幕截图 2023-03-07 203958"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--统计数量,最好是用 *</span><br><span class="line">SELECT count(*) FROM stu;</span><br><span class="line">--最大值</span><br><span class="line">SELECT max(age) FROM stu;</span><br><span class="line">--最小值</span><br><span class="line">SELECT min(age) FROM stu;</span><br><span class="line">--平均值</span><br><span class="line">SELECT avg(age) FROM stu;</span><br><span class="line">--总和</span><br><span class="line">SELECT sum(age) FROM stu;</span><br></pre></td></tr></table></figure><h3 id="分组查询"><a href="#分组查询" class="headerlink" title="分组查询"></a>分组查询</h3><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312205772.png" alt="屏幕截图 2023-03-07 205749"></p><h3 id="分页查询"><a href="#分页查询" class="headerlink" title="分页查询"></a>分页查询</h3><blockquote><p>格式：select 字段列表 from 表名 LIMIT 起始索引 ，查询条目数</p><p>计算公式：起始索引 &#x3D; （当前页码-1）* 每页条目数</p></blockquote><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM stu LIMIT 3,3;</span><br></pre></td></tr></table></figure><h3 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h3><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312206756.png" alt="69337116782767212.png"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">##建表时：</span><br><span class="line">create table db1(</span><br><span class="line">    id int 约束名称</span><br><span class="line">    ...</span><br><span class="line">)</span><br><span class="line">##建表后</span><br><span class="line">alter table db1 modify</span><br></pre></td></tr></table></figure><h3 id="外键"><a href="#外键" class="headerlink" title="外键"></a>外键</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">##创建表时</span><br><span class="line">constraint 键名 foreign key(作为从键的列)</span><br><span class="line">##创建表后</span><br><span class="line">alter table emp add constraint 键名 foreign key(作为从键的列)  referances 主键</span><br></pre></td></tr></table></figure><h3 id="内外链接"><a href="#内外链接" class="headerlink" title="内外链接"></a>内外链接</h3><p>隐式：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 要查询的东西 from 表1，表2... where 条件</span><br></pre></td></tr></table></figure><p>显式：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select 要查询的东西 from  表1 join 表2 on 条件</span><br></pre></td></tr></table></figure><blockquote><p>内连接相当于几个表的交集</p></blockquote><p>外连接</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">左/右：</span><br><span class="line">select 字段 from 表1 left/right join 表2 on 条件</span><br></pre></td></tr></table></figure><blockquote><p>外连接相当于表1或表2全部加交集</p></blockquote><h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312206866.png" alt="9A1C63D3EC824C450120034C619A175A"></p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305312207013.png" alt="屏幕截图 2023-03-09 175024"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 学习笔记 </tag>
+            
+            <tag> MySQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>SpringBoot实战——瑞吉外卖</title>
       <link href="/2023/05/20/SpringBoot%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96/"/>
       <url>/2023/05/20/SpringBoot%E5%AE%9E%E6%88%98%E2%80%94%E2%80%94%E7%91%9E%E5%90%89%E5%A4%96%E5%8D%96/</url>
@@ -54,11 +75,11 @@
       
         <tags>
             
+            <tag> 学习笔记 </tag>
+            
             <tag> SpringBoot入门 </tag>
             
             <tag> java </tag>
-            
-            <tag> 学习笔记 </tag>
             
         </tags>
       
@@ -83,11 +104,11 @@
       
         <tags>
             
+            <tag> 学习笔记 </tag>
+            
             <tag> SpringBoot入门 </tag>
             
             <tag> java </tag>
-            
-            <tag> 学习笔记 </tag>
             
         </tags>
       
@@ -112,9 +133,9 @@
       
         <tags>
             
-            <tag> java </tag>
-            
             <tag> 学习笔记 </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
