@@ -4,6 +4,81 @@
   
     
     <entry>
+      <title>力扣每日一题Day05摩尔投票</title>
+      <link href="/2023/09/29/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day05%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8/"/>
+      <url>/2023/09/29/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day05%E6%91%A9%E5%B0%94%E6%8A%95%E7%A5%A8/</url>
+      
+        <content type="html"><![CDATA[<p><em><u>我从失败走向成功。</u></em></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/majority-element/">多数元素</a></p><p>给定一个大小为 <code>n</code> 的数组 <code>nums</code> ，返回其中的多数元素。多数元素是指在数组中出现次数 <strong>大于</strong> <code>⌊ n/2 ⌋</code> 的元素。</p><p>你可以假设数组是非空的，并且给定的数组总是存在多数元素。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">majorityElement</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">sort</span>(nums.<span class="built_in">begin</span>(), nums.<span class="built_in">end</span>());</span><br><span class="line">        <span class="type">int</span> len = <span class="built_in">ceil</span>(nums.<span class="built_in">size</span>() / <span class="number">2.0</span>);</span><br><span class="line">        <span class="keyword">return</span> nums[len - <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202309300042563.png" alt="image-20230930004210454"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>这个求解思路其实和求解众数（一组数据中出现次数最多的数）但题目是找出出现次数大于n&#x2F;2的数（多数元素），只能说多数元素一定是众数，而众数不一定是多数元素，但题目说假设一定会有多数元素，所以用这种方法也可以求出题解。</p><p>将一个数组排序，中位数一定是众数。</p><p>在评论区看到了一个很有意思的解法，叫摩尔投票，代码如下：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">majorityElement</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = <span class="number">0</span>,votes = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> num:nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(votes == <span class="number">0</span>) n = num;</span><br><span class="line">            votes += num == n?<span class="number">1</span>:<span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>n为目前假设的多数元素的值，votes是“票数”，遍历数组，当数组元素等于我们假设的多数元素，那就给票数+1，如果等于则-1，因为多数元素的数量一定大于数组长度的一半，所以其他元素的票数是不可能大于多数元素的，即-1的数量会小于+1，而对于错误的假设，最终votes一定会变成0，然后会假设新的元素为多数元素。</p><ul><li><strong>时间复杂度 O(N)O(N)*O*(*N*) ：</strong> NN<em>N</em> 为数组 <code>nums</code> 长度。</li><li><strong>空间复杂度 O(1)O(1)*O*(1) ：</strong> <code>votes</code> 变量使用常数大小的额外空间。</li></ul><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202309300101950.png" alt="image-20230930010124902"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>力扣每日一题Day04</title>
+      <link href="/2023/09/29/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day04/"/>
+      <url>/2023/09/29/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day04/</url>
+      
+        <content type="html"><![CDATA[<p><em><u>忧虑的度过一天，比起工作一周还令人劳累。</u></em></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/">删除有序数组中的重复项 II</a></p><p>给你一个有序数组 <code>nums</code> ，请你**<a href="http://baike.baidu.com/item/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95"> 原地</a>** 删除重复出现的元素，使得出现次数超过两次的元素<strong>只出现两次</strong> ，返回删除后数组的新长度。</p><p>不要使用额外的数组空间，你必须在 <strong><a href="https://baike.baidu.com/item/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95">原地 </a>修改输入数组</strong> 并在使用 O(1) 额外空间的条件下完成。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeDuplicates</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(nums.<span class="built_in">size</span>() &lt;= <span class="number">2</span>) <span class="keyword">return</span> nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> fast = <span class="number">2</span>,slow = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">for</span>(fast;fast &lt; nums.<span class="built_in">size</span>();fast++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[fast] != nums[slow - <span class="number">2</span>])&#123;</span><br><span class="line">                nums[slow] = nums[fast];</span><br><span class="line">                slow++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> slow;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202309292227897.png" alt="image-20230929222725858"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>此题可以参考昨天的一题，都是采用了快慢指针的思路，不过本题多了一个条件是可以允许元素最多出现两次，在昨天的题目中，我们是用快指针和慢指针前一个元素比较，发现如果一样则表示重复，慢指针所指的位置作为待替换位。今天的题目，我们需要比较慢指针前两个元素和快指针所指元素，如果一样，说明元素数量超过两个，则慢指针为待替换位。<br>本题提交的时候错了一次，因为没有检测如果数组的元素数量小于等于2（因为两个元素理论上不需要进行操作）。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>力扣每日一题Day03</title>
+      <link href="/2023/09/29/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day03/"/>
+      <url>/2023/09/29/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day03/</url>
+      
+        <content type="html"><![CDATA[<p><em><u>海上生明月，天涯共此时。</u></em></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array/">删除有序数组中的重复项</a></p><p>给你一个 <strong>非严格递增排列</strong> 的数组 <code>nums</code> ，请你**<a href="http://baike.baidu.com/item/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95"> 原地</a>** 删除重复出现的元素，使每个元素 <strong>只出现一次</strong> ，返回删除后数组的新长度。元素的 <strong>相对顺序</strong> 应该保持 <strong>一致</strong> 。然后返回 <code>nums</code> 中唯一元素的个数。</p><p>考虑 <code>nums</code> 的唯一元素的数量为 <code>k</code> ，你需要做以下事情确保你的题解可以被通过：</p><ul><li>更改数组 <code>nums</code> ，使 <code>nums</code> 的前 <code>k</code> 个元素包含唯一元素，并按照它们最初在 <code>nums</code> 中出现的顺序排列。<code>nums</code> 的其余元素与 <code>nums</code> 的大小不重要。</li><li>返回 <code>k</code> 。</li></ul><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">removeDuplicates</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">       <span class="type">int</span> first = <span class="number">1</span>;</span><br><span class="line">       <span class="type">int</span> second = <span class="number">1</span>;</span><br><span class="line">       <span class="keyword">for</span>(first;first &lt; nums.<span class="built_in">size</span>();first++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(nums[first] != nums[second - <span class="number">1</span>])&#123;</span><br><span class="line">                nums[second] = nums[first];</span><br><span class="line">                second++;</span><br><span class="line">            &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> second + <span class="number">1</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202309292145337.png" alt="image-20230929214547282"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>本题运用了快慢指针，代码中first为快指针，second为慢指针，循环开始时，快慢指针同时指向数组中第二个元素，在之后的循环中，若快指针和慢指针后一位不相等，则快慢指针一起后移，若相等，则 慢指针原地不动，作为替换位，快指针继续后移，直到找到不等于慢指针后一位元素的数，这时将慢指针本身指向的数替换为快指针的值，完成去重。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>力扣每日一题Day02</title>
       <link href="/2023/09/27/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day02/"/>
       <url>/2023/09/27/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day02/</url>
@@ -258,9 +333,9 @@
       
         <tags>
             
-            <tag> 学习笔记 </tag>
-            
             <tag> SpringBoot入门 </tag>
+            
+            <tag> 学习笔记 </tag>
             
             <tag> java </tag>
             
@@ -287,9 +362,9 @@
       
         <tags>
             
-            <tag> 学习笔记 </tag>
-            
             <tag> SpringBoot入门 </tag>
+            
+            <tag> 学习笔记 </tag>
             
             <tag> java </tag>
             
