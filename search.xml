@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>力扣每日一题Day13</title>
+      <link href="/2023/10/10/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day13/"/>
+      <url>/2023/10/10/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day13/</url>
+      
+        <content type="html"><![CDATA[<p><em><u>失败是抵达卓越的另一个踏脚石。</u></em></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/product-of-array-except-self/"> 除自身以外数组的乘积</a></p><p>给你一个整数数组 <code>nums</code>，返回 <em>数组 <code>answer</code> ，其中 <code>answer[i]</code> 等于 <code>nums</code> 中除 <code>nums[i]</code> 之外其余各元素的乘积</em> 。</p><p>题目数据 <strong>保证</strong> 数组 <code>nums</code>之中任意元素的全部前缀元素和后缀的乘积都在 <strong>32 位</strong> 整数范围内。</p><p>请 <strong>不要使用除法，</strong>且在 <code>O(*n*)</code> 时间复杂度内完成此题。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">productExceptSelf</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> len = nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span>(len == <span class="number">0</span>) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">ans</span><span class="params">(len,<span class="number">1</span>)</span></span>;</span><br><span class="line">        ans[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">1</span>; i &lt; nums.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            ans[i] = ans[i - <span class="number">1</span>] * nums[i - <span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> tmp = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = nums.<span class="built_in">size</span>() - <span class="number">2</span>; i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">            tmp *= nums[i + <span class="number">1</span>];</span><br><span class="line">            ans[i] *= tmp;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310101901689.png" alt="image-20231010190145639"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>刚拿到题目，我还在窃喜，此题只要提前算出所有元素的乘积，再利用除法即可轻松解决，无奈发现题目要求不能用除法，遂作罢。其实要想求一个数除了自己本身，其他数的乘积无非就是三个步骤，第一步，求该数左边部分的乘积，第二步求右边部分的乘积，第三步两边乘积相乘，即可得到结果，于是在代码中，我用了两个循环，第一个循环是计算每个元素左边所有元素的乘积，第二个循环是用第一步的计算结果，乘右边部分，最终得到ans数组即是结果，题中还运用了动态规划，ans数组中的每一个元素，都可以看做是前一个元素乘nums数组上一个元素所得，没有重复计算，下面附几张大佬的解读图：</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310101904116.png" alt="image-20231010190452079"></p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310101905326.png" alt="image-20231010190502289"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>力扣每日一题Day12</title>
       <link href="/2023/10/09/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day12/"/>
       <url>/2023/10/09/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day12/</url>
@@ -468,9 +493,9 @@
       
         <tags>
             
-            <tag> SpringBoot入门 </tag>
-            
             <tag> 项目实战 </tag>
+            
+            <tag> SpringBoot入门 </tag>
             
         </tags>
       
@@ -510,9 +535,9 @@
             
             <tag> 学习笔记 </tag>
             
-            <tag> java </tag>
-            
             <tag> SpringBoot入门 </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
@@ -539,9 +564,9 @@
             
             <tag> 学习笔记 </tag>
             
-            <tag> java </tag>
-            
             <tag> SpringBoot入门 </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
