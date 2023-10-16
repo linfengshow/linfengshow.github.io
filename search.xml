@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>力扣每日一题Day16</title>
+      <link href="/2023/10/16/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day16/"/>
+      <url>/2023/10/16/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day16/</url>
+      
+        <content type="html"><![CDATA[<p><em><u>大人物都是从小人物时不断地尝试而造就。</u></em></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/trapping-rain-water/">接雨水</a></p><p>给定 <code>n</code> 个非负整数表示每个宽度为 <code>1</code> 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> h = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> max_height = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> hole = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> wall = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; height.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            max_height = <span class="built_in">max</span>(max_height,height[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(max_height &gt; h)&#123;</span><br><span class="line">            <span class="type">int</span> left = <span class="number">0</span>;</span><br><span class="line">            <span class="type">int</span> right = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i &lt; height.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(height[i] &gt; h)&#123;</span><br><span class="line">                    left = i;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = height.<span class="built_in">size</span>() - <span class="number">1</span>;i &gt;= <span class="number">0</span>;i--)&#123;</span><br><span class="line">                <span class="keyword">if</span>(height[i] &gt; h)&#123;</span><br><span class="line">                    right = i;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            wall = <span class="built_in">min</span>(height[left],height[right]);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = left + <span class="number">1</span>;i &lt; right;i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(height[i] &lt; wall)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(height[i] &gt; h)&#123;</span><br><span class="line">                        sum += wall - height[i];</span><br><span class="line">                    &#125;<span class="keyword">else</span> </span><br><span class="line">                        sum += wall - h;</span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            h = wall;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310161842687.png" alt="image-20231016184207642"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>我本人的想法是，首先对整个数组进行一次遍历，找到数组中的最大值作为循环的限制条件。设置变量h为当前层数，然后进入while循环，在while循环中首先从左到右遍历，找到第一个值大于h的下标，记为left，同理从右到左遍历，记为right。接下来在left和right中的较小者（记为wall）围成的区域中进行操作，遍历此区域，从中减去无法存储雨水的区域，这里分两种情况，如果值大于h，则wall与当前height[i]的差值就是储水区域，如果值小于h，则wall和h的差值是储水区域，第二种这样处理的原因是防止已经计算过的区域重复计算，遍历完当前层后，更新h的值为当前wall的高度。</p><p>但这样时间复杂度十分滴高，大概率因为进行了太多次的循环，下面是官方题解代码：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">trap</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> left = <span class="number">0</span>, right = height.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> leftMax = <span class="number">0</span>, rightMax = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">            leftMax = <span class="built_in">max</span>(leftMax, height[left]);</span><br><span class="line">            rightMax = <span class="built_in">max</span>(rightMax, height[right]);</span><br><span class="line">            <span class="keyword">if</span> (height[left] &lt; height[right]) &#123;</span><br><span class="line">                ans += leftMax - height[left];</span><br><span class="line">                ++left;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                ans += rightMax - height[right];</span><br><span class="line">                --right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>另外我单独写了一份可以可视化样例的程序，能方便调试吧。</p><p>(比较丑)</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;head.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; n = &#123;<span class="number">5</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">7</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">2</span>,<span class="number">7</span>,<span class="number">6</span>&#125;;</span><br><span class="line">    <span class="type">int</span> max = <span class="number">7</span>;</span><br><span class="line">    <span class="keyword">while</span>(max &gt; <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; n.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(n[i] &gt;= max)&#123;</span><br><span class="line">                cout&lt;&lt;<span class="number">0</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span> </span><br><span class="line">                cout&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        cout&lt;&lt;endl;</span><br><span class="line">        max--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">getchar</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310161933908.png" alt="image-20231016193349868"></p><p>根据给的样例生成柱状图↑</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>力扣每日一题Day15</title>
       <link href="/2023/10/12/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day15/"/>
       <url>/2023/10/12/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day15/</url>
@@ -583,11 +608,11 @@
       
         <tags>
             
-            <tag> 学习笔记 </tag>
-            
             <tag> SpringBoot入门 </tag>
             
             <tag> java </tag>
+            
+            <tag> 学习笔记 </tag>
             
         </tags>
       
@@ -612,11 +637,11 @@
       
         <tags>
             
-            <tag> 学习笔记 </tag>
-            
             <tag> SpringBoot入门 </tag>
             
             <tag> java </tag>
+            
+            <tag> 学习笔记 </tag>
             
         </tags>
       
@@ -641,9 +666,9 @@
       
         <tags>
             
-            <tag> 学习笔记 </tag>
-            
             <tag> java </tag>
+            
+            <tag> 学习笔记 </tag>
             
         </tags>
       
