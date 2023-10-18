@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>力扣每日一题Day18</title>
+      <link href="/2023/10/18/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day18/"/>
+      <url>/2023/10/18/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day18/</url>
+      
+        <content type="html"><![CDATA[<p><u><em>怪罪别人绝不会让你获得成功。</em></u></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/integer-to-roman/">整数转罗马数字</a></p><p>罗马数字包含以下七种字符： <code>I</code>， <code>V</code>， <code>X</code>， <code>L</code>，<code>C</code>，<code>D</code> 和 <code>M</code>。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">字符          数值</span><br><span class="line">I             1</span><br><span class="line">V             5</span><br><span class="line">X             10</span><br><span class="line">L             50</span><br><span class="line">C             100</span><br><span class="line">D             500</span><br><span class="line">M             1000</span><br></pre></td></tr></table></figure><p>例如， 罗马数字 2 写做 <code>II</code> ，即为两个并列的 1。12 写做 <code>XII</code> ，即为 <code>X</code> + <code>II</code> 。 27 写做 <code>XXVII</code>, 即为 <code>XX</code> + <code>V</code> + <code>II</code> 。</p><p>通常情况下，罗马数字中小的数字在大的数字的右边。但也存在特例，例如 4 不写做 <code>IIII</code>，而是 <code>IV</code>。数字 1 在数字 5 的左边，所表示的数等于大数 5 减小数 1 得到的数值 4 。同样地，数字 9 表示为 <code>IX</code>。这个特殊的规则只适用于以下六种情况：</p><ul><li><code>I</code> 可以放在 <code>V</code> (5) 和 <code>X</code> (10) 的左边，来表示 4 和 9。</li><li><code>X</code> 可以放在 <code>L</code> (50) 和 <code>C</code> (100) 的左边，来表示 40 和 90。 </li><li><code>C</code> 可以放在 <code>D</code> (500) 和 <code>M</code> (1000) 的左边，来表示 400 和 900。</li></ul><p>给你一个整数，将其转为罗马数字。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">intToRoman</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">        string result;</span><br><span class="line">        <span class="type">int</span> values[] = &#123;<span class="number">1000</span>, <span class="number">900</span>, <span class="number">500</span>, <span class="number">400</span>, <span class="number">100</span>, <span class="number">90</span>, <span class="number">50</span>, <span class="number">40</span>, <span class="number">10</span>, <span class="number">9</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">1</span>&#125;;</span><br><span class="line">        string reps[] = &#123;<span class="string">&quot;M&quot;</span>, <span class="string">&quot;CM&quot;</span>, <span class="string">&quot;D&quot;</span>, <span class="string">&quot;CD&quot;</span>, <span class="string">&quot;C&quot;</span>, <span class="string">&quot;XC&quot;</span>, <span class="string">&quot;L&quot;</span>, <span class="string">&quot;XL&quot;</span>, <span class="string">&quot;X&quot;</span>, <span class="string">&quot;IX&quot;</span>, <span class="string">&quot;V&quot;</span>, <span class="string">&quot;IV&quot;</span>, <span class="string">&quot;I&quot;</span>&#125;;</span><br><span class="line">        <span class="keyword">while</span>(num)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">13</span>; i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(num &gt;= values[i])&#123;</span><br><span class="line">                    result += reps[i];</span><br><span class="line">                    num -= values[i];</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310182055103.png" alt="image-20231018205534054"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>此题是上一道题目的变种，上一道题目是给出罗马数字转阿拉伯数字，本题给出阿拉伯数字转罗马数字。先说一下我遇到的问题，开始我还是打算利用hash表存放对应关系，即键是int值是string。但后面遇到了问题。此题解法为贪心算法，贪心思路是遍历存放数和罗马数字数组，每次取其中能表示的最大的数，（因为数组中的对应关系刻意采用从大到小的方式排列，只要从头遍历，一旦满足条件就break），表示出来然后将原数减掉表示完的数，将得到的罗马数字加到ans里，循环结束后即可得到正确ans。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>力扣每日一题Day17</title>
       <link href="/2023/10/17/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day17/"/>
       <url>/2023/10/17/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day17/</url>
@@ -633,11 +658,11 @@
       
         <tags>
             
+            <tag> 学习笔记 </tag>
+            
             <tag> SpringBoot入门 </tag>
             
             <tag> java </tag>
-            
-            <tag> 学习笔记 </tag>
             
         </tags>
       
@@ -662,11 +687,11 @@
       
         <tags>
             
+            <tag> 学习笔记 </tag>
+            
             <tag> SpringBoot入门 </tag>
             
             <tag> java </tag>
-            
-            <tag> 学习笔记 </tag>
             
         </tags>
       
@@ -691,9 +716,9 @@
       
         <tags>
             
-            <tag> java </tag>
-            
             <tag> 学习笔记 </tag>
+            
+            <tag> java </tag>
             
         </tags>
       
