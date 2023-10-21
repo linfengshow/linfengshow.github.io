@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>力扣每日一题Day20</title>
+      <link href="/2023/10/21/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day20/"/>
+      <url>/2023/10/21/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day20/</url>
+      
+        <content type="html"><![CDATA[<p><u><em>别害怕失败，只要做对一次就够了。</em></u></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/longest-common-prefix/">最长公共前缀</a></p><p>编写一个函数来查找字符串数组中的最长公共前缀。</p><p>如果不存在公共前缀，返回空字符串 <code>&quot;&quot;</code>。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">string <span class="title">longestCommonPrefix</span><span class="params">(vector&lt;string&gt;&amp; strs)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> i;</span><br><span class="line">        string ans_str = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="type">int</span> min_len = <span class="number">1000000</span>;</span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; strs.<span class="built_in">size</span>(); i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(strs[i].<span class="built_in">length</span>() &lt; min_len)&#123;</span><br><span class="line">                min_len = strs[i].<span class="built_in">length</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(i &lt; min_len)&#123;</span><br><span class="line">            <span class="type">char</span> c = strs[<span class="number">0</span>][i];</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt; strs.<span class="built_in">size</span>(); j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(strs[j][i] != c)&#123;</span><br><span class="line">                    <span class="keyword">return</span> ans_str;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">            ans_str += c;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans_str;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310211654074.png" alt="image-20231021165435032"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>简单题，首先统计出最短字符串，然后同时比较字符串的i下标对应的字符是否一致，相同则加到结果中，不同则直接返回当前结果。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>力扣每日一题Day19</title>
+      <link href="/2023/10/21/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day19/"/>
+      <url>/2023/10/21/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day19/</url>
+      
+        <content type="html"><![CDATA[<p><u><em>若想得到你从未拥有的东西，你得愿意做你从未做过的事。</em></u></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/length-of-last-word/">最后一个单词的长度</a></p><p>给你一个字符串 <code>s</code>，由若干单词组成，单词前后用一些空格字符隔开。返回字符串中 <strong>最后一个</strong> 单词的长度。</p><p><strong>单词</strong> 是指仅由字母组成、不包含任何空格字符的最大子字符串。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lengthOfLastWord</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> len = s.<span class="built_in">length</span>();</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> i;</span><br><span class="line">        <span class="keyword">for</span>(i = len - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">            <span class="keyword">if</span>(s[i] == <span class="string">&#x27; &#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(i;i &gt;= <span class="number">0</span>; i--)&#123;</span><br><span class="line">            <span class="keyword">if</span>(s[i] == <span class="string">&#x27; &#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                ans++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202310211626322.png" alt="image-20231021162646271"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>简单题，过于简单了。通过观察给出的测试用例，发现存在以空格结尾的字符串，所以单纯从后往前遍历字符串，碰到空格就停止是无法实现的，所以先用了一个循环，记录第一个字母的位置，从此位置开始再进行依次循环，碰到空格就停止。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>力扣每日一题Day18</title>
       <link href="/2023/10/18/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day18/"/>
       <url>/2023/10/18/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day18/</url>
