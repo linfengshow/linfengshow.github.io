@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>力扣每日一题Day30</title>
+      <link href="/2023/11/04/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day30/"/>
+      <url>/2023/11/04/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day30/</url>
+      
+        <content type="html"><![CDATA[<p><em><u>在有说服力的演讲，讯息的传递不是由口到耳，而是由心到心。</u></em></p><h1 id="题目描述："><a href="#题目描述：" class="headerlink" title="题目描述："></a>题目描述：</h1><p><a href="https://leetcode.cn/problems/longest-substring-without-repeating-characters/">无重复字符的最长子串</a></p><p>给定一个字符串 <code>s</code> ，请你找出其中不含有重复字符的 <strong>最长子串</strong> 的长度。</p><h1 id="解题代码："><a href="#解题代码：" class="headerlink" title="解题代码："></a>解题代码：</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">// &quot;abcabcbb&quot;</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> tag;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; s.<span class="built_in">length</span>(); j++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(tag = i; tag &lt; j; tag++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(s[tag] == s[j])&#123;</span><br><span class="line">                    i = tag + <span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ans = ans &gt; (j - i + <span class="number">1</span>) ? ans : (j - i + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202311041405503.png" alt="image-20231104140551457"></p><h1 id="解读与收获："><a href="#解读与收获：" class="headerlink" title="解读与收获："></a>解读与收获：</h1><p>本来想是先用暴力法做一做，看看评分如何，没想到还不错，所以直接暴力法秒了。原理即j指针每移动一次就回头看一下有没有重复的，有的话将i移到重复元素的下一位，然后重新找。每次循环后更新ans的大小。</p><p>注意：</p><p>“pwwkew”他的最长无重复子串长为“wke”3位，而不是”pwke“，这是一个子序列，而不是子串。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 力扣每日一题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 算法刷题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>力扣每日一题Day29（滑动窗口）</title>
       <link href="/2023/11/02/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day29/"/>
       <url>/2023/11/02/%E5%8A%9B%E6%89%A3%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98Day29/</url>
