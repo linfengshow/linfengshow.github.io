@@ -1,0 +1,544 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><title>微服务入门学习 | 驴の奇思妙想</title><meta name="author" content="林峰"><meta name="copyright" content="林峰"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="微服务入门学习 部分资料来自于黑马程序员  热门微服务技术对比 简单实现微服务的代码 此处分别为用户服务和订单服务  订单服务的端口为8080，且调用cloud_order数据库  用户服务在8081，且数据库为cloud_user 加上简单的业务代码，这样就能实现简单的微服务。 访问user_service  访问order_service  微服务远程调用问题描述： 由于微服务架构中，一个完整">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微服务入门学习">
+<meta property="og:url" content="http://example.com/2023/12/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="驴の奇思妙想">
+<meta property="og:description" content="微服务入门学习 部分资料来自于黑马程序员  热门微服务技术对比 简单实现微服务的代码 此处分别为用户服务和订单服务  订单服务的端口为8080，且调用cloud_order数据库  用户服务在8081，且数据库为cloud_user 加上简单的业务代码，这样就能实现简单的微服务。 访问user_service  访问order_service  微服务远程调用问题描述： 由于微服务架构中，一个完整">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211434585.png">
+<meta property="article:published_time" content="2023-12-21T06:30:53.000Z">
+<meta property="article:modified_time" content="2023-12-22T10:26:18.591Z">
+<meta property="article:author" content="林峰">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="SpringCloud">
+<meta property="article:tag" content="微服务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211434585.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/12/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '微服务入门学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-22 18:26:18'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.jpg.dog/f574fdc2ac0995637310ca62c0e983ae.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211434585.png')"><nav id="nav"><span id="blog-info"><a href="/" title="驴の奇思妙想"><img class="site-icon" src="https://i.jpg.dog/067b7122cdcbd7bd95a77c044726c930.jpeg"/><span class="site-name">驴の奇思妙想</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">微服务入门学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-21T06:30:53.000Z" title="发表于 2023-12-21 14:30:53">2023-12-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-22T10:26:18.591Z" title="更新于 2023-12-22 18:26:18">2023-12-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="微服务入门学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="微服务入门学习"><a href="#微服务入门学习" class="headerlink" title="微服务入门学习"></a>微服务入门学习</h1><blockquote>
+<p>部分资料来自于黑马程序员</p>
+</blockquote>
+<h2 id="热门微服务技术对比"><a href="#热门微服务技术对比" class="headerlink" title="热门微服务技术对比"></a>热门微服务技术对比</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211454709.png" alt="image-20231221145402634"></p>
+<h2 id="简单实现微服务的代码"><a href="#简单实现微服务的代码" class="headerlink" title="简单实现微服务的代码"></a>简单实现微服务的代码</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211528506.png" alt="image-20231221152818473"></p>
+<p>此处分别为用户服务和订单服务</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211529092.png" alt="image-20231221152901057"></p>
+<p>订单服务的端口为8080，且调用cloud_order数据库</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211529778.png" alt="image-20231221152949744"></p>
+<p>用户服务在8081，且数据库为cloud_user</p>
+<p>加上简单的业务代码，这样就能实现简单的微服务。</p>
+<p>访问user_service</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211531063.png" alt="image-20231221153135034"></p>
+<p>访问order_service</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211531420.png" alt="image-20231221153150390"></p>
+<h2 id="微服务远程调用"><a href="#微服务远程调用" class="headerlink" title="微服务远程调用"></a>微服务远程调用</h2><p>问题描述：</p>
+<p>由于微服务架构中，一个完整的项目被分成了很多可以独立工作的部分，但我们在实际调用这些模块的时候，可能并不只是调用其中一个，我们可能需要多个模块协同工作后的结果，比如上面举例的用户的订单模块，如果我们想要在查询订单的时候一块查询到用户信息，而订单模块又无法直接操作用户数据库，应该怎么办？</p>
+<p>这就需要微服务的远程调用，即用模块调用模块，实现方法类似于用java代码发送http请求给目标模块</p>
+<p>spring提供了可以实现这一功能的工具：RestTemplate</p>
+<p>首先先在启动类里面注册RestTemplate</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    注册RestTemplate</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在需要的地方注入并调用RestTemplate</p>
+<p>注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> RestTemplate restTemplate;</span><br></pre></td></tr></table></figure>
+
+<p>调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//        创建url，指向发送请求的地址</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://localhost:8081/user/&quot;</span> + order.getUserId();</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> restTemplate.getForObject(url, User.class);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>restTemplate.getForObject 发送get请求</p>
+<p>restTemplate.postForObject 发送post请求</p>
+<p>默认返回json格式字符串，可以自己定义返回类型</p>
+</blockquote>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211602645.png" alt="image-20231221160222609"></p>
+<p>返回的json同时有user模块的内容</p>
+<p>需要注意的是：url一定记得完整，加http:&#x2F;&#x2F;,然后不要忘记参数前加&#x2F;</p>
+<h2 id="Eureka注册中心"><a href="#Eureka注册中心" class="headerlink" title="Eureka注册中心"></a>Eureka注册中心</h2><p>上述远程调用看似很成功，实则存在很多问题：</p>
+<ul>
+<li>服务消费者如何获知提供者的地址信息（肯定不是写localhost）</li>
+<li>如果存在多个提供者，消费者如何从中选择</li>
+<li>消费者如何知道提供者的健康状态（服务器是否挂了）</li>
+</ul>
+<p>这就需要Eureka，它作为一个中间媒介，在每一个服务启动时，都会向eureka注册服务信息（名字，地址端口）,然后如果有服务有远程调用需要，它会联系Eureka，然后Eureka提供信息，如果存在多个提供者，则会利用负载均衡算法。至于健康状态，Eureka每30s会从每个服务接受一次信号（心跳续约），如果收不到，该服务的信息就会被剔除。</p>
+<h2 id="Eureka实践"><a href="#Eureka实践" class="headerlink" title="Eureka实践"></a>Eureka实践</h2><p>导入依赖包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--        导入Eureka依赖--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-server<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>创建启动类,并加入@EnableEurekaServer注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableEurekaServer</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EurekaApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(EurekaApplication.class,args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建配置文件，配置eureka</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8082</span> <span class="comment">#服务端口</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">eurekaserver</span> <span class="comment">#服务名称</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="attr">service-url:</span> <span class="comment">#eureka地址信息</span></span><br><span class="line">      <span class="attr">defaultZone:</span> <span class="string">http://localhost:8082/eureka</span></span><br></pre></td></tr></table></figure>
+
+<p>启动eureka</p>
+<p>访问defaultZone: <a target="_blank" rel="noopener" href="http://localhost:8082/eureka%EF%BC%8C%E7%9C%8B%E5%88%B0%E4%B8%8B%E9%9D%A2%E7%9A%84%E6%8E%A7%E5%88%B6%E5%8F%B0%E4%BB%A3%E8%A1%A8%E6%88%90%E5%8A%9F">http://localhost:8082/eureka，看到下面的控制台代表成功</a></p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211655423.png" alt="image-20231221165535338"></p>
+<h2 id="Eureka服务注册"><a href="#Eureka服务注册" class="headerlink" title="Eureka服务注册"></a>Eureka服务注册</h2><p>之前提到过，Eureka是一个中间媒介，所有的服务都会在它上面进行一个注册，同时所有的远程调用都会经过它得到服务提供者，所以接下来要做的是将每个服务都注册到Eureka上</p>
+<p>先引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--        Eureka客户端依赖--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>配置注册信息（本服务的名字，以及Eureka服务的地址），此处以user-service为例，order-service一致</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">userserver</span> <span class="comment">#服务名称</span></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line">  <span class="attr">client:</span></span><br><span class="line">    <span class="attr">service-url:</span> <span class="comment">#eureka地址信息</span></span><br><span class="line">      <span class="attr">defaultZone:</span> <span class="string">http://localhost:8082/eureka</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以启动看一下是否已经在Eureka注册表里了</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211957766.png" alt="image-20231221195713695"></p>
+<h2 id="怎么使用Eureka"><a href="#怎么使用Eureka" class="headerlink" title="怎么使用Eureka"></a>怎么使用Eureka</h2><p>我们之前利用template远程调用时，在url中写的是死代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://localhost:8081/user/&quot;</span> + order.getUserId();</span><br></pre></td></tr></table></figure>
+
+<p>有了Eureka后，我们就可以利用服务名称来替代ip地址和端口号部分</p>
+<p>即</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> <span class="string">&quot;http://userserver/user/&quot;</span> + order.getUserId();</span><br></pre></td></tr></table></figure>
+
+<p>还要在启动类的注册resttemplate函数上加上@LoadBalanced注解用来启动负载均衡</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    注册RestTemplate</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="keyword">public</span> RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，这是必须要加的。</p>
+<h2 id="Ribbon负载均衡"><a href="#Ribbon负载均衡" class="headerlink" title="Ribbon负载均衡"></a>Ribbon负载均衡</h2><p>首先这个地址<a target="_blank" rel="noopener" href="http://userserver/user/...%EF%BC%8C%E6%98%AF%E4%B8%80%E4%B8%AA%E6%97%A0%E6%95%88%E5%9C%B0%E5%9D%80%EF%BC%8C%E5%8D%B3%E6%88%91%E4%BB%AC%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87%E6%B5%8F%E8%A7%88%E5%99%A8%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE%E8%AF%A5%E5%9C%B0%E5%9D%80%E4%B8%8B%E7%9A%84%E5%86%85%E5%AE%B9%EF%BC%8C%E8%80%8C%E6%88%91%E4%BB%AC%E6%9C%80%E7%BB%88%E5%8D%B4%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE%E5%88%B0%E6%88%91%E4%BB%AC%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%EF%BC%8C%E8%BF%99%E6%98%AF%E5%9B%A0%E4%B8%BA%E4%B8%AD%E9%97%B4%E6%9C%89%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%8B%A6%E6%88%AA%E5%99%A8%E6%8B%A6%E6%88%AA%E4%BA%86%E8%BF%99%E4%B8%AA%E8%AF%B7%E6%B1%82%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BA%A4%E7%BB%99Ribbon%E5%B9%B6%E5%AE%9E%E7%8E%B0%E4%BA%86%E8%A7%A3%E6%9E%90%EF%BC%8C%E7%84%B6%E5%90%8E%E4%BA%A4%E7%BB%99IRule%E6%89%A7%E8%A1%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95%E9%80%89%E6%8B%A9%E4%BA%86%E5%90%88%E9%80%82%E7%9A%84%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E8%80%85">http://userserver/user/...，是一个无效地址，即我们无法通过浏览器直接访问该地址下的内容，而我们最终却可以访问到我们要的数据，这是因为中间有负载均衡拦截器拦截了这个请求，然后交给Ribbon并实现了解析，然后交给IRule执行负载均衡算法选择了合适的服务提供者</a></p>
+<h2 id="负载均衡策略"><a href="#负载均衡策略" class="headerlink" title="负载均衡策略"></a>负载均衡策略</h2><table>
+<thead>
+<tr>
+<th><strong>内置负载均衡规则类</strong></th>
+<th><strong>规则描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RoundRobinRule</td>
+<td>简单轮询服务列表来选择服务器。它是Ribbon默认的负载均衡规则。</td>
+</tr>
+<tr>
+<td>AvailabilityFilteringRule</td>
+<td>对以下两种服务器进行忽略：   （1）在默认情况下，这台服务器如果3次连接失败，这台服务器就会被设置为“短路”状态。短路状态将持续30秒，如果再次连接失败，短路的持续时间就会几何级地增加。  （2）并发数过高的服务器。如果一个服务器的并发连接数过高，配置了AvailabilityFilteringRule规则的客户端也会将其忽略。并发连接数的上限，可以由客户端的<clientName>.<clientConfigNameSpace>.ActiveConnectionsLimit属性进行配置。</td>
+</tr>
+<tr>
+<td>WeightedResponseTimeRule</td>
+<td>为每一个服务器赋予一个权重值。服务器响应时间越长，这个服务器的权重就越小。这个规则会随机选择服务器，这个权重值会影响服务器的选择。</td>
+</tr>
+<tr>
+<td><strong>ZoneAvoidanceRule</strong></td>
+<td>以区域可用的服务器为基础进行服务器的选择。使用Zone对服务器进行分类，这个Zone可以理解为一个机房、一个机架等。而后再对Zone内的多个服务做轮询。</td>
+</tr>
+<tr>
+<td>BestAvailableRule</td>
+<td>忽略那些短路的服务器，并选择并发数较低的服务器。</td>
+</tr>
+<tr>
+<td>RandomRule</td>
+<td>随机选择一个可用的服务器。</td>
+</tr>
+<tr>
+<td>RetryRule</td>
+<td>重试机制的选择逻辑</td>
+</tr>
+</tbody></table>
+<p>默认负载均衡策略为轮训<strong>ZoneAvoidanceRule</strong>，怎么改变这个默认策略：</p>
+<p>方法1：<br>自己注入一个(配置类或者启动类中)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> IRule <span class="title function_">randomRule</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RandomRule</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>方法二：</p>
+<p>在配置文件中针对某项微服务修改（此处针对userserver）</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">userserver:</span></span><br><span class="line">  <span class="attr">ribbon:</span></span><br><span class="line">    <span class="attr">NFLoadBalancerRuleClassName:</span> <span class="string">com.netflix.loadbalancer.RandomRule</span> <span class="comment"># 负载均衡规则 </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Ribbon饥饿加载"><a href="#Ribbon饥饿加载" class="headerlink" title="Ribbon饥饿加载"></a>Ribbon饥饿加载</h2><p>Ribbon默认是懒加载，即第一次访问才创建LoadBalanceClient，请求时间长。饥饿加载会在项目启动时加载，降低第一次访问时的时间。</p>
+<p>在需要饥饿加载的服务配置中加入以下内容</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line">  <span class="attr">eager-load:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">clients:</span> </span><br><span class="line">    	<span class="string">-userserver</span>  <span class="comment">#指定对哪个服务饥饿加载，可以多个</span></span><br><span class="line">    	<span class="string">-xxxserver</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a>Nacos</h2><p>Nacos是阿里提供的注册中心，功能类似于Eureka且要更强大，两种注册中心都要学一下</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>GitHub主页：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos">https://github.com/alibaba/nacos</a></p>
+<p>GitHub的Release下载页：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases">https://github.com/alibaba/nacos/releases</a></p>
+<p>安装完成后进行解压</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212256701.png" alt="image-20231221225613653"></p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>conf&#x2F;application.properties这是nacos的配置文件，可以在里面进行一些常规的端口配置</p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><p>在bin目录下，你可以直接双击startup.cmd</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212258877.png" alt="image-20231221225839838"></p>
+<p>也可以在命令行模式下运行指令</p>
+<blockquote>
+<p>startup.cmd -m standalone</p>
+<p>此处为单机启动</p>
+</blockquote>
+<p>启动界面：<br><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212300066.png" alt="image-20231221230001017"></p>
+<p>然后我们可以访问上面给出的网页，可以看到nacos的界面</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212301899.png" alt="image-20231221230114812"></p>
+<p>默认登录名和密码都是nacos</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212301323.png" alt="image-20231221230141264"></p>
+<p>这就是nacos的界面，之后我们会在这里进行操作</p>
+<p>关闭的话就是运行shutdown.cmd</p>
+<h2 id="Nacos快速入门"><a href="#Nacos快速入门" class="headerlink" title="Nacos快速入门"></a>Nacos快速入门</h2><p>首先在项目的父工程中添加spring-cloud-alilbaba管理依赖，进行包管理</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.5.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在服务中添加nacos客户端依赖（注释掉之前的eureka依赖）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- nacos客户端依赖包 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-discovery<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后修改配置文件（注释掉eureka）</p>
+<p>配置结束后，正常启动服务，然后启动nacos进入控制台，就会看到两个服务被注册进来了</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212322745.png" alt="image-20231221232205678"></p>
+<p>同样实现了注册中心的功能。</p>
+<h2 id="Nacos服务分级储存模型"><a href="#Nacos服务分级储存模型" class="headerlink" title="Nacos服务分级储存模型"></a>Nacos服务分级储存模型</h2><p>实现服务的集群化</p>
+<p>一个<strong>服务</strong>可以有多个<strong>实例</strong>，例如我们的user-service，可以有:</p>
+<ul>
+<li>127.0.0.1:8081</li>
+<li>127.0.0.1:8082</li>
+<li>127.0.0.1:8083</li>
+</ul>
+<p>假如这些实例分布于全国各地的不同机房，例如：</p>
+<ul>
+<li>127.0.0.1:8081，在上海机房</li>
+<li>127.0.0.1:8082，在上海机房</li>
+<li>127.0.0.1:8083，在杭州机房</li>
+</ul>
+<p>Nacos就将同一机房内的实例 划分为一个<strong>集群</strong>。</p>
+<p>也就是说，user-service是服务，一个服务可以包含多个集群，如杭州、上海，每个集群下可以有多个实例，形成分级模型，如图：</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212331253.png" alt="image-20210713232522531"></p>
+<p>微服务互相访问时，应该尽可能访问同集群实例，因为本地访问速度更快。当本集群内不可用时，才访问其它集群。例如：</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212331260.png" alt="image-20210713232658928"></p>
+<p>杭州机房内的order-service应该优先访问同机房的user-service。</p>
+<p>操作：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">nacos:</span></span><br><span class="line">  <span class="attr">server-addr:</span> <span class="string">localhost:8848</span>  <span class="comment">#nacos 服务端地址</span></span><br><span class="line">  <span class="attr">discovery:</span></span><br><span class="line">    <span class="attr">cluster-name:</span> <span class="string">AH</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Nacos负载均衡"><a href="#Nacos负载均衡" class="headerlink" title="Nacos负载均衡"></a>Nacos负载均衡</h2><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">userserver:</span></span><br><span class="line">  <span class="attr">ribbon:</span></span><br><span class="line"><span class="comment">#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 负载均衡规则</span></span><br><span class="line">      <span class="attr">NFLoadBalancerRuleClassName:</span> <span class="string">com.alibaba.cloud.nacos.ribbon.NacosRule</span> <span class="comment"># 负载均衡规则 </span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>NacosRule优先同集群内随机</p>
+</blockquote>
+<h2 id="配置权重"><a href="#配置权重" class="headerlink" title="配置权重"></a>配置权重</h2><p>权重可以影响被分配的几率，越大越容易被分配到，这个在nacos中就可以设置</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212347240.png" alt="image-20231221234708178"></p>
+<h2 id="环境隔离"><a href="#环境隔离" class="headerlink" title="环境隔离"></a>环境隔离</h2><p>Nacos提供了namespace来实现环境隔离功能。</p>
+<ul>
+<li>nacos中可以有多个namespace</li>
+<li>namespace下可以有group、service等</li>
+<li>不同namespace之间相互隔离，例如不同namespace的服务互相不可见</li>
+</ul>
+<p>方法</p>
+<p>首先创建命名空间：</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312212355722.png" alt="image-20231221235551673"></p>
+<p>然后进入到服务的配置文件进行配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">nacos:</span></span><br><span class="line">  <span class="attr">server-addr:</span> <span class="string">localhost:8848</span>  <span class="comment">#nacos 服务端地址</span></span><br><span class="line">  <span class="attr">discovery:</span></span><br><span class="line">    <span class="attr">cluster-name:</span> <span class="string">AH</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">25cd75bc-82c3-4396-ba42-a42a5de77b92</span> <span class="comment">#命名空间id</span></span><br></pre></td></tr></table></figure>
+
+<p>这样就实现了隔离</p>
+<h2 id="Nacos和Eureka相同和不同"><a href="#Nacos和Eureka相同和不同" class="headerlink" title="Nacos和Eureka相同和不同"></a>Nacos和Eureka相同和不同</h2><ul>
+<li>Nacos与eureka的共同点<ul>
+<li>都支持服务注册和服务拉取</li>
+<li>都支持服务提供者心跳方式做健康检测</li>
+</ul>
+</li>
+<li>Nacos与Eureka的区别<ul>
+<li>Nacos支持服务端主动检测提供者状态：临时实例采用心跳模式，非临时实例采用主动检测模式</li>
+<li>临时实例心跳不正常会被剔除，非临时实例则不会被剔除</li>
+<li>Nacos支持服务列表变更的消息推送模式，服务列表更新更及时</li>
+<li>Nacos集群默认采用AP方式，当集群中存在非临时实例时，采用CP模式；Eureka采用AP方式</li>
+</ul>
+</li>
+</ul>
+<h2 id="配置管理"><a href="#配置管理" class="headerlink" title="配置管理"></a>配置管理</h2><p>在实际生产过程中，可能会出现频繁修改配置的情况，但是如果修改配置过程中涉及的微服务数量多了，会很麻烦且修改配置的微服务需要重启以生效新的配置，但重启可能会带来很大的损失，所以我们需要Nacos的配置管理，他可以保存服务中一些比较重要的核心配置，服务在启动时只需读取上面的配置，然后结合自身配置组成一套完整的配置文件。通过配置热更新，如果要修改只需要修改Nacos的配置管理，其余微服务就会读取到变化后的配置，然后加以应用，实现热更新。</p>
+<h2 id="Nacos实现配置管理"><a href="#Nacos实现配置管理" class="headerlink" title="Nacos实现配置管理"></a>Nacos实现配置管理</h2><p>直接在Nacos控制台里操作</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221646375.png" alt="image-20231222164621257"></p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221651280.png" alt="image-20231222165131214"></p>
+<h2 id="微服务获取Nacos中的配置"><a href="#微服务获取Nacos中的配置" class="headerlink" title="微服务获取Nacos中的配置"></a>微服务获取Nacos中的配置</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221700941.png" alt="image-20231222170002889"></p>
+<p>由上面的流程图我们可以看到，bootstrap这一配置文件的优先级是要高于application的，因此我们需要把连接Nacos服务的配置配置到该文件里面，这样Spring会先根据这个配置文件访问到Nacos，并提取到其中的服务，然后在把其中的配置和本地application中的配置合并成完整的配置，这就是整个配置管理的全过程。</p>
+<p>首先导入Nacos配置管理依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--nacos配置管理依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-nacos-config<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在resource目录下添加bootstrap.yml文件</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221714999.png" alt="image-20231222171403954"></p>
+<p>然后配置bootstrap，将Nacos服务连接配置，还有想要获取的被Nacos管理的配置信息写进去，注意一定要和Nacos中的名字相对应</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">application:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">userserver</span> <span class="comment"># 对应配置名称</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">dev</span> <span class="comment">#开发环境，这里是dev </span></span><br><span class="line">  <span class="attr">cloud:</span></span><br><span class="line">    <span class="attr">nacos:</span></span><br><span class="line">      <span class="attr">server-addr:</span> <span class="string">localhost:8848</span> <span class="comment"># Nacos地址</span></span><br><span class="line">      <span class="attr">config:</span></span><br><span class="line">        <span class="attr">file-extension:</span> <span class="string">yaml</span> <span class="comment"># 文件后缀名</span></span><br></pre></td></tr></table></figure>
+
+<p>由于application中已经存在了Nacos服务连接配置，所以需要删除，还有原先在application中配置的dateformat</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221718207.png" alt="image-20231222171848160"></p>
+<p>然后验证一下是否已经读到配置了，我们可以利用@Value注解拿到配置文件中的配置</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221725173.png" alt="image-20231222172508121"></p>
+<p>看结果，成功读到：<br><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221725232.png" alt="image-20231222172555188"></p>
+<h2 id="配置热更新"><a href="#配置热更新" class="headerlink" title="配置热更新"></a>配置热更新</h2><p>热更新即让我们的微服务能实时获取Nacos中变化的配置，而无需重启微服务</p>
+<p>有两种方法</p>
+<p>法一：<br>在@Value注入的类上添加注解@RefreshScope</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221752042.png" alt="image-20231222175209994"></p>
+<p>法二（推荐）:<br>利用@ConfigurationProperties注解自动注入代替@Value注解。</p>
+<p>为此我们可以单独建一个类，来获取配置文件的属性值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;pattern&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PatternProperties</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String dateformat;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>@ConfigurationProperties会自动将符合前缀名并且属性名和该类中的属性一致的配置的值，自动注入到属性中。</p>
+</blockquote>
+<p>获取的话，首先利用@Autowired注入该类，因为已经添加过@Data注解，直接调用get方法即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(patternProperties.getDateformat());</span><br></pre></td></tr></table></figure>
+
+<p>然后让我们试验一下</p>
+<p>重启微服务</p>
+<p>先修改Nacos配置管理中的配置</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221801781.png" alt="image-20231222180110737"></p>
+<p>然后再次访问我们写了输出语句的方法，热更新成功</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221801049.png" alt="image-20231222180155006"></p>
+<p>再改一次</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221802694.png" alt="image-20231222180228652"></p>
+<p>再试试，依然成功</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221803418.png" alt="image-20231222180301381"></p>
+<h2 id="多环境配置共享"><a href="#多环境配置共享" class="headerlink" title="多环境配置共享"></a>多环境配置共享</h2><p>微服务启动时会从Nacos中读取多个配置</p>
+<p>我们可以在Nacos中再加一个配置，格式是name + .yaml</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221823872.png" alt="image-20231222182304821"></p>
+<p>这样这个配置所有环境下的userserver都可以读到</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;pattern&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PatternProperties</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String dateformat;</span><br><span class="line">    <span class="keyword">private</span> String sharedValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们再访问</p>
+<p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312221825327.png" alt="image-20231222182521285"></p>
+<p>访问到了两个配置文件中的内容，但实际上当前userserver是dev环境，这说明没有标明环境的配置文件可被多个微服务共享</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">林峰</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/12/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/">http://example.com/2023/12/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">驴の奇思妙想</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/SpringCloud/">SpringCloud</a><a class="post-meta__tags" href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></div><div class="post_share"><div class="social-share" data-image="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211434585.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305072246822.png" target="_blank"><img class="post-qr-code-img" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305072246822.png" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305072247461.jpg" target="_blank"><img class="post-qr-code-img" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305072247461.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/12/09/Nginx%E5%85%A5%E9%97%A8/" title="Nginx入门"><img class="cover" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312091911446.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Nginx入门</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/03/30/SpringBoot%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/" title="驴のSpringBoot学习笔记（二）"><img class="cover" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305092341607.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-30</div><div class="title">驴のSpringBoot学习笔记（二）</div></div></a></div><div><a href="/2023/03/30/SpringBoot%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" title="驴のSpringBoot学习笔记"><img class="cover" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305072306791.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-30</div><div class="title">驴のSpringBoot学习笔记</div></div></a></div><div><a href="/2023/03/27/java/" title="java入门笔记"><img class="cover" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202305072239335.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-27</div><div class="title">java入门笔记</div></div></a></div><div><a href="/2023/06/15/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%86%85%E6%A0%B8%E5%BC%80%E5%8F%91/" title="数据库内核开发"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-06-15</div><div class="title">数据库内核开发</div></div></a></div><div><a href="/2023/12/09/Nginx%E5%85%A5%E9%97%A8/" title="Nginx入门"><img class="cover" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312091911446.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-09</div><div class="title">Nginx入门</div></div></a></div><div><a href="/2023/12/07/Mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="Mysql主从复制"><img class="cover" src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312072123240.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-12-07</div><div class="title">Mysql主从复制</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.jpg.dog/f574fdc2ac0995637310ca62c0e983ae.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">林峰</div><div class="author-info__description">小试驴刀</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">52</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">分享技术与学习笔记</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.</span> <span class="toc-text">微服务入门学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%83%AD%E9%97%A8%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%8A%80%E6%9C%AF%E5%AF%B9%E6%AF%94"><span class="toc-number">1.1.</span> <span class="toc-text">热门微服务技术对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E5%BE%AE%E6%9C%8D%E5%8A%A1%E7%9A%84%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text">简单实现微服务的代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%BF%9C%E7%A8%8B%E8%B0%83%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">微服务远程调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eureka%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="toc-number">1.4.</span> <span class="toc-text">Eureka注册中心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eureka%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.5.</span> <span class="toc-text">Eureka实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Eureka%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C"><span class="toc-number">1.6.</span> <span class="toc-text">Eureka服务注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E4%BD%BF%E7%94%A8Eureka"><span class="toc-number">1.7.</span> <span class="toc-text">怎么使用Eureka</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.8.</span> <span class="toc-text">Ribbon负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AD%96%E7%95%A5"><span class="toc-number">1.9.</span> <span class="toc-text">负载均衡策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ribbon%E9%A5%A5%E9%A5%BF%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.10.</span> <span class="toc-text">Ribbon饥饿加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos"><span class="toc-number">1.11.</span> <span class="toc-text">Nacos</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.11.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE"><span class="toc-number">1.11.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">1.11.3.</span> <span class="toc-text">启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.12.</span> <span class="toc-text">Nacos快速入门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos%E6%9C%8D%E5%8A%A1%E5%88%86%E7%BA%A7%E5%82%A8%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.13.</span> <span class="toc-text">Nacos服务分级储存模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.14.</span> <span class="toc-text">Nacos负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9D%83%E9%87%8D"><span class="toc-number">1.15.</span> <span class="toc-text">配置权重</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB"><span class="toc-number">1.16.</span> <span class="toc-text">环境隔离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos%E5%92%8CEureka%E7%9B%B8%E5%90%8C%E5%92%8C%E4%B8%8D%E5%90%8C"><span class="toc-number">1.17.</span> <span class="toc-text">Nacos和Eureka相同和不同</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="toc-number">1.18.</span> <span class="toc-text">配置管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos%E5%AE%9E%E7%8E%B0%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="toc-number">1.19.</span> <span class="toc-text">Nacos实现配置管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9C%8D%E5%8A%A1%E8%8E%B7%E5%8F%96Nacos%E4%B8%AD%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">1.20.</span> <span class="toc-text">微服务获取Nacos中的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%83%AD%E6%9B%B4%E6%96%B0"><span class="toc-number">1.21.</span> <span class="toc-text">配置热更新</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%85%B1%E4%BA%AB"><span class="toc-number">1.22.</span> <span class="toc-text">多环境配置共享</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/12/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" title="微服务入门学习"><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211434585.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="微服务入门学习"/></a><div class="content"><a class="title" href="/2023/12/21/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%85%A5%E9%97%A8%E5%AD%A6%E4%B9%A0/" title="微服务入门学习">微服务入门学习</a><time datetime="2023-12-21T06:30:53.000Z" title="发表于 2023-12-21 14:30:53">2023-12-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/09/Nginx%E5%85%A5%E9%97%A8/" title="Nginx入门"><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312091911446.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Nginx入门"/></a><div class="content"><a class="title" href="/2023/12/09/Nginx%E5%85%A5%E9%97%A8/" title="Nginx入门">Nginx入门</a><time datetime="2023-12-09T11:09:58.000Z" title="发表于 2023-12-09 19:09:58">2023-12-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/07/Mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="Mysql主从复制"><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312072123240.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Mysql主从复制"/></a><div class="content"><a class="title" href="/2023/12/07/Mysql%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" title="Mysql主从复制">Mysql主从复制</a><time datetime="2023-12-07T12:48:21.000Z" title="发表于 2023-12-07 20:48:21">2023-12-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/03/Redis%E5%85%A5%E9%97%A8/" title="Redis入门"><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312031907953.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis入门"/></a><div class="content"><a class="title" href="/2023/12/03/Redis%E5%85%A5%E9%97%A8/" title="Redis入门">Redis入门</a><time datetime="2023-12-03T11:03:51.000Z" title="发表于 2023-12-03 19:03:51">2023-12-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/27/Linux%E6%95%99%E7%A8%8B/" title="Linux教程"><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202311272200675.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux教程"/></a><div class="content"><a class="title" href="/2023/11/27/Linux%E6%95%99%E7%A8%8B/" title="Linux教程">Linux教程</a><time datetime="2023-11-27T13:57:33.000Z" title="发表于 2023-11-27 21:57:33">2023-11-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202312211434585.png')"><div id="footer-wrap"><div class="copyright">&copy;2023 By 林峰</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (true){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: '',
+      appKey: '',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="8448315969" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true" data-lrcType="-1"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":250,"height":500},"mobile":{"show":false},"rect":"opacity:0.7","log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
