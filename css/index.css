@@ -3735,22 +3735,26 @@ h1.page-title + .tag-cloud-list {
 #nav .menus_items {
   display: inline;
 }
-#nav .menus_items .menus_item {
+#nav .menus_items .menus_item,
+#nav .menus_items .icat_menus_item {
   position: relative;
   display: inline-block;
   padding: 0 0 0 14px;
 }
-#nav .menus_items .menus_item:hover .menus_item_child {
+#nav .menus_items .menus_item:hover .menus_item_child,
+#nav .menus_items .icat_menus_item:hover .menus_item_child {
   display: block;
 }
-#nav .menus_items .menus_item:hover > a > i:last-child {
+#nav .menus_items .menus_item:hover > a > i:last-child,
+#nav .menus_items .icat_menus_item:hover > a > i:last-child {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
   -o-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
-#nav .menus_items .menus_item > a > i:last-child {
+#nav .menus_items .menus_item > a > i:last-child,
+#nav .menus_items .icat_menus_item > a > i:last-child {
   padding: 4px;
   -webkit-transition: -webkit-transform 0.3s;
   -moz-transition: -moz-transform 0.3s;
@@ -3758,7 +3762,8 @@ h1.page-title + .tag-cloud-list {
   -ms-transition: -ms-transform 0.3s;
   transition: transform 0.3s;
 }
-#nav .menus_items .menus_item .menus_item_child {
+#nav .menus_items .menus_item .menus_item_child,
+#nav .menus_items .icat_menus_item .menus_item_child {
   position: absolute;
   right: 0;
   display: none;
@@ -3775,7 +3780,8 @@ h1.page-title + .tag-cloud-list {
   -ms-animation: sub_menus 0.3s 0.1s ease both;
   animation: sub_menus 0.3s 0.1s ease both;
 }
-#nav .menus_items .menus_item .menus_item_child:before {
+#nav .menus_items .menus_item .menus_item_child:before,
+#nav .menus_items .icat_menus_item .menus_item_child:before {
   position: absolute;
   top: -8px;
   left: 0;
@@ -3783,21 +3789,26 @@ h1.page-title + .tag-cloud-list {
   height: 20px;
   content: '';
 }
-#nav .menus_items .menus_item .menus_item_child li {
+#nav .menus_items .menus_item .menus_item_child li,
+#nav .menus_items .icat_menus_item .menus_item_child li {
   list-style: none;
 }
-#nav .menus_items .menus_item .menus_item_child li:hover {
+#nav .menus_items .menus_item .menus_item_child li:hover,
+#nav .menus_items .icat_menus_item .menus_item_child li:hover {
   background: var(--text-bg-hover);
 }
-#nav .menus_items .menus_item .menus_item_child li:first-child {
+#nav .menus_items .menus_item .menus_item_child li:first-child,
+#nav .menus_items .icat_menus_item .menus_item_child li:first-child {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
-#nav .menus_items .menus_item .menus_item_child li:last-child {
+#nav .menus_items .menus_item .menus_item_child li:last-child,
+#nav .menus_items .icat_menus_item .menus_item_child li:last-child {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 }
-#nav .menus_items .menus_item .menus_item_child li a {
+#nav .menus_items .menus_item .menus_item_child li a,
+#nav .menus_items .icat_menus_item .menus_item_child li a {
   display: inline-block;
   padding: 8px 16px;
   width: 100%;
@@ -3844,6 +3855,123 @@ h1.page-title + .tag-cloud-list {
 }
 #nav .site-page:not(.child):hover:after {
   width: 100%;
+}
+.loading-bg {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: var(#191970);
+  z-index: 1001;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -o-transition: 0.3s;
+  -ms-transition: 0.3s;
+  transition: 0.3s;
+}
+#loading-box .loading-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: auto;
+  border: 4px solid #f0f0f2;
+  -webkit-animation-duration: 0.3s;
+  -moz-animation-duration: 0.3s;
+  -o-animation-duration: 0.3s;
+  -ms-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+  -webkit-animation-name: loadingAction;
+  -moz-animation-name: loadingAction;
+  -o-animation-name: loadingAction;
+  -ms-animation-name: loadingAction;
+  animation-name: loadingAction;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+  -moz-animation-direction: alternate;
+  -o-animation-direction: alternate;
+  -ms-animation-direction: alternate;
+  animation-direction: alternate;
+}
+#loading-box .loading-image-dot {
+  width: 30px;
+  height: 30px;
+  background: #6bdf8f;
+  position: absolute;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(18px, 24px);
+  -moz-transform: translate(18px, 24px);
+  -o-transform: translate(18px, 24px);
+  -ms-transform: translate(18px, 24px);
+  transform: translate(18px, 24px);
+}
+#loading-box.loaded .loading-bg {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  z-index: -1000;
+}
+@-moz-keyframes loadingAction {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    filter: alpha(opacity=40);
+  }
+}
+@-webkit-keyframes loadingAction {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    filter: alpha(opacity=40);
+  }
+}
+@-o-keyframes loadingAction {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    filter: alpha(opacity=40);
+  }
+}
+@keyframes loadingAction {
+  0% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  100% {
+    opacity: 0.4;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+    filter: alpha(opacity=40);
+  }
 }
 #pagination .pagination {
   margin-top: 20px;
@@ -4457,12 +4585,19 @@ h1.page-title + .tag-cloud-list {
 #sidebar #sidebar-menus .menus_items {
   padding: 0 10px 40px;
 }
+#sidebar #sidebar-menus .menus_items .menus_item {
+  margin: 10px 0;
+}
 #sidebar #sidebar-menus .menus_items .site-page {
   position: relative;
   display: block;
   padding: 6px 30px 6px 22px;
   color: var(--font-color);
   font-size: 1.15em;
+  border: var(--icat-style-border-always);
+  background: var(--icat-essay-card-bg);
+  font-size: 14px;
+  border-radius: 12px;
 }
 #sidebar #sidebar-menus .menus_items .site-page:hover {
   background: var(--text-bg-hover);
@@ -4470,6 +4605,7 @@ h1.page-title + .tag-cloud-list {
 #sidebar #sidebar-menus .menus_items .site-page i:first-child {
   width: 15%;
   text-align: left;
+  padding-left: 10px;
 }
 #sidebar #sidebar-menus .menus_items .site-page.group > i:last-child {
   position: absolute;
@@ -4494,6 +4630,44 @@ h1.page-title + .tag-cloud-list {
 #sidebar #sidebar-menus .menus_items .menus_item_child {
   margin: 0;
   list-style: none;
+}
+#sidebar #sidebar-menus .icat_menus_item {
+  display: inline-block;
+  width: 50%;
+}
+#sidebar #sidebar-menus .icat_menus_item .site-page {
+  text-align: center;
+  margin: 4px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -o-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -o-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: 8px 0;
+  border-radius: 12px;
+  font-size: 14px;
+}
+#sidebar #sidebar-menus .icat_menus_item .site-page i:first-child {
+  padding-left: 0;
+}
+#sidebar #sidebar-menus .icat_menus_item .site-page > .icat-essay {
+  font-weight: 500;
+}
+#sidebar #sidebar-menus .icat_menus_item .site-page span {
+  margin-top: -8px;
 }
 #vcomment {
   font-size: 1.1em;
