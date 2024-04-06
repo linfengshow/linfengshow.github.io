@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>利用RequestRateLimiter实现简单限流</title>
+      <link href="/2024/04/06/%E5%88%A9%E7%94%A8RequestRateLimiter%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E9%99%90%E6%B5%81/"/>
+      <url>/2024/04/06/%E5%88%A9%E7%94%A8RequestRateLimiter%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E9%99%90%E6%B5%81/</url>
+      
+        <content type="html"><![CDATA[<p>自己做的微服务网站今天终于算是上线了（内部测试），虽然是内部测试，但在上线之前还是考虑做了一下gateway网关的限流，担心群众里面有坏人🐍</p><h2 id="利用RequestRateLimiter实现简单限流"><a href="#利用RequestRateLimiter实现简单限流" class="headerlink" title="利用RequestRateLimiter实现简单限流"></a>利用RequestRateLimiter实现简单限流</h2><p>RequestRateLimiter是gateway自带的 过滤器。</p><p>RequestRateLimiter 过滤器可以基于令牌桶算法实现请求限流。其具体原理如下：</p><ol><li><p><strong>创建令牌桶</strong>：在 RequestRateLimiter 过滤器初始化时，会读取配置参数创建对应的令牌桶。</p></li><li><p><strong>生成令牌</strong>：当新的请求到达 RequestRateLimiter 过滤器时，它会检查令牌桶中是否有足够的令牌。如果有，则从令牌桶中移除一个令牌；否则请求被拒绝。</p></li><li><p><strong>限制连接数</strong>：在超出最大连接数之后会在队列里等待。</p></li><li><p><strong>计时更新令牌桶大小</strong>：RequestRateLimiter 过滤器会定期计时更新令牌桶的大小，确保让进入的请求有机会得到执行，同时防止恶意攻击或者系统故障导致服务器负载过重。</p></li></ol><p>在使用 RequestRateLimiter 过滤器时，我们可以通过设置参数 <code>replenishRate</code> 和 <code>burstCapacity</code> 来控制令牌桶的填充速率和容量，然后将其与特定的路由或服务进行绑定，以实现对特定接口的限流效果。</p><blockquote><p>资料来源——知乎用户：苏格拉没有底</p></blockquote><h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><ol><li><p>引入redis依赖并配置连接信息<br>RequestRateLimiter 一般会依赖 ReactiveStringRedisTemplate, 而它又依赖到 ReactiveRedisConnectionFactory 的实现类LettuceConnectionFactory</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis-reactive<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.5.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br></pre></td></tr></table></figure></li><li><p>实现限流策略</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> 林峰</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2024/4/6 10:22</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Version</span> 1.0</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RequestRateLimiterResolver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> KeyResolver <span class="title function_">ipKeyResolver</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="comment">//        ip限流</span></span><br><span class="line">        <span class="keyword">return</span> exchange -&gt; Mono.just(</span><br><span class="line">                exchange.getRequest()</span><br><span class="line">                        .getHeaders()</span><br><span class="line">                        .getFirst(<span class="string">&quot;X-Forwarded-For&quot;</span>)</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> KeyResolver <span class="title function_">pathKeyResolver</span><span class="params">()</span>&#123;</span><br><span class="line"><span class="comment">//        根据请求路径限流</span></span><br><span class="line">        <span class="keyword">return</span> exchange -&gt; Mono.just(</span><br><span class="line">                exchange.getRequest()</span><br><span class="line">                        .getPath()</span><br><span class="line">                        .toString()</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>过滤器接受一个可选的keyResolver参数和特定于速率限制器的参数。该参数的作用就是用来根据你设定的规则生成key，比如在redis中使用什么key。</p></li><li><p>配置限流</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- id: subject # 路由ID 刷题模块</span><br><span class="line">  uri: lb:<span class="comment">//al-club-subject</span></span><br><span class="line">  predicates:</span><br><span class="line">    - Path=/subject<span class="comment">/**</span></span><br><span class="line"><span class="comment">  filters:</span></span><br><span class="line"><span class="comment">    - StripPrefix=1</span></span><br><span class="line"><span class="comment">    - name: RequestRateLimiter</span></span><br><span class="line"><span class="comment">      args:</span></span><br><span class="line"><span class="comment">        #                令牌桶填充速率</span></span><br><span class="line"><span class="comment">        redis-rate-limiter.replenishRate: 50</span></span><br><span class="line"><span class="comment">        #                令牌桶上限</span></span><br><span class="line"><span class="comment">        redis-rate-limiter.burstCapacity: 50</span></span><br><span class="line"><span class="comment">        #                获取Bean对象</span></span><br><span class="line"><span class="comment">        key-resolver: &quot;#&#123;<span class="doctag">@pathKeyResolver</span>&#125;&quot;</span></span><br></pre></td></tr></table></figure><p> “#{@pathKeyResolver}”是一个SpEL表达式，它引用了一个名为userKeyResolver的bean,也就是我们刚刚定义的KeyResolver，这样就可以实现一个简单的限流。</p></li></ol><h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p>修改nacos上的配置，改小一点，方便演示</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404061331628.png" alt="image-20240406133127520"></p><p>进行一次小小的压测（软件是apifox）</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404061332732.png" alt="image-20240406133252695"></p><p>结果</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404061334077.png" alt="image-20240406133445017"></p><p>可以看到限流成功，失败请求的错误码为429，代表Too many Requests</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 面试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 学习笔记 </tag>
+            
+            <tag> gateway </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redisson实现可重入锁原理</title>
       <link href="/2024/03/06/Redisson%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E5%8E%9F%E7%90%86/"/>
       <url>/2024/03/06/Redisson%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E5%8E%9F%E7%90%86/</url>
@@ -37,6 +64,12 @@
       
         <content type="html"><![CDATA[<h1 id="Resource和-Autowired区别"><a href="#Resource和-Autowired区别" class="headerlink" title="@Resource和@Autowired区别"></a>@Resource和@Autowired区别</h1><p>@Resource和@Autowired都是用来做依赖注入的，但他们存在几点不同：</p><h2 id="1-来源不同"><a href="#1-来源不同" class="headerlink" title="1.来源不同"></a>1.来源不同</h2><p>@Resource来源于Java定义的注解，来自于JSR-250</p><p>@Autowired来自于Spring定义的注解</p><h2 id="2-支持参数不同"><a href="#2-支持参数不同" class="headerlink" title="2.支持参数不同"></a>2.支持参数不同</h2><p>@Resource 支持七个参数</p><blockquote><ul><li>name：资源的JNDI名称。在spring的注入时，指定bean的唯一标识。</li><li>type：指定bean的类型。</li><li>lookup:引用指向的资源的名称。它可以使用全局JNDI名称链接到任何兼容的资源。</li><li>authenticationType:指定资源的身份验证类型。它只能为任何受支持类型的连接工厂的资源指定此选项，而不能为其他类型的资源指定此选项。</li><li>shareable：指定此资源是否可以在此组件和其他组件之间共享。</li><li>mappedName：指定资源的映射名称。</li><li>description：指定资源的描述。</li></ul></blockquote><p>@Autowired 仅支持一个参数requied</p><h2 id="3-依赖查找顺序不同"><a href="#3-依赖查找顺序不同" class="headerlink" title="3.依赖查找顺序不同"></a>3.依赖查找顺序不同</h2><p>@Resource先根据name查找对象，如果通过name找不到，则通过类型查找</p><p>@Autowired和Resource相反，即先查找类型，再查找name</p><h2 id="4-注入规则不同"><a href="#4-注入规则不同" class="headerlink" title="4.注入规则不同"></a>4.注入规则不同</h2><p>@Autowired支持：属性注入，构造方法注入，Setter注入</p><p>@Resource只支持：属性注入，Setter注入</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//属性注入  </span></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造方法注入</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserController</span><span class="params">(UserService userService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.userService = userService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Setter 注入</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUserService</span><span class="params">(UserService userService)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.userService = userService;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="5-编译器报错"><a href="#5-编译器报错" class="headerlink" title="5.编译器报错"></a>5.编译器报错</h2><p>@Autowired编译器会报错（不影响运行）</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202403030002530.png" alt="image-20240303000251494"></p><p>@Resource不存在报错</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202403030003619.png" alt="image-20240303000321589"></p>]]></content>
       
+      
+      <categories>
+          
+          <category> 面试 </category>
+          
+      </categories>
       
       
         <tags>
@@ -112,6 +145,8 @@
             
             <tag> 学习笔记 </tag>
             
+            <tag> 实战经验 </tag>
+            
         </tags>
       
     </entry>
@@ -165,6 +200,33 @@
         <tags>
             
             <tag> 学习笔记 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>我的生活（一）</title>
+      <link href="/2024/02/18/%E6%88%91%E7%9A%84%E7%94%9F%E6%B4%BB%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+      <url>/2024/02/18/%E6%88%91%E7%9A%84%E7%94%9F%E6%B4%BB%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+      
+        <content type="html"><![CDATA[<p>从开始做博客也一年多了，期间我一直将博客作为一个可以优雅地（相较于直接看markdown）复习我的学习笔记的平台，但是思来想去，一个博客好像不该如此枯燥无味，一个正常的博客貌似应该提供一个专门的板块，供作者（也就是我）发发牢骚，随便瞎聊点日常，或者碎碎念一些小破事，这样日后如果博客能做大做强，有更多人来看我的笔记，听我发发牢骚，或者在评论区对我发发牢骚，这想必比一个铺天盖地是学习资料的网站要有趣得多。</p><p>​——————lf 2024.2.18</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 随便聊聊 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 随便 </tag>
+            
+            <tag> 日常 </tag>
             
         </tags>
       
@@ -1408,6 +1470,12 @@
         <content type="html"><![CDATA[<h1 id="数据库内核开发"><a href="#数据库内核开发" class="headerlink" title="数据库内核开发"></a>数据库内核开发</h1><h2 id="数据库基本架构"><a href="#数据库基本架构" class="headerlink" title="数据库基本架构"></a>数据库基本架构</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306151747696.png" alt="屏幕截图 2023-06-15 173746"></p><h2 id="关系数据库结构"><a href="#关系数据库结构" class="headerlink" title="关系数据库结构"></a>关系数据库结构</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306151748578.png" alt="屏幕截图(1)"></p><h2 id="Buffer-POOL缓存机制"><a href="#Buffer-POOL缓存机制" class="headerlink" title="Buffer POOL缓存机制"></a>Buffer POOL缓存机制</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306202054690.png" alt="屏幕截图(8)"></p><p>因为我们的数据库中的数据是放在磁盘里的，但我们每次读取都去读磁盘，显然这样效率就大寄特寄了，所以类似于cup与主存之间，我们也需要一个缓冲区来加快读写速率。</p><h2 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B+Tree"></a>B+Tree</h2><blockquote><p>1.叶结点大小和存储单元大小一致，能起到预读数据效果</p><p>2.叶节点有链接关系，可以遍历</p><p>3.只有叶结点放数据</p></blockquote><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306221905892.png" alt="屏幕截图 2023-06-22 185507"></p><p>B+tree搜索过程：</p><p>比如搜索29，在磁盘块1中可以看出，29在p2所指区域</p><p>在p2区域，可以看出29小于36在p1区域</p><p>最后找到磁盘块7，搜索到29</p><p>B+树的删除过程</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306230119096.png" alt="屏幕截图(14)"></p><p>删除7</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306230122781.png" alt="屏幕截图(16)"></p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306230123531.png" alt="屏幕截图(17)"></p><p>删除11</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306230123390.png" alt="屏幕截图(18)"></p><p>B+树插入过程</p><p>插入40</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306230123645.png" alt="屏幕截图(15)"></p><h2 id="LSM-Tree架构"><a href="#LSM-Tree架构" class="headerlink" title="LSM-Tree架构"></a>LSM-Tree架构</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306222256466.png" alt="屏幕截图(9)"></p><blockquote><p>用户输入的数据会先存放在memorytable中，当memorytable中的数据达到一定阈值，memorytable就会变成一个Frozen~(只读)，然后生成一个新的memorytable,把Forzen写入磁盘</p></blockquote><h2 id="Compaction"><a href="#Compaction" class="headerlink" title="Compaction"></a>Compaction</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306222305784.png" alt="屏幕截图(10)"></p><blockquote><p>Compaction操作是将多个SSTable合成一个，能提高查询效率，但提高了能耗</p></blockquote><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306222306198.png" alt="屏幕截图(11)"></p><blockquote><p>Compaction三个概念：1.对写放大2.空间放大3.读放大</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306222317586.png" alt="屏幕截图(12)"></p><p>比较常用的策略</p></blockquote><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202306222319045.png" alt="屏幕截图(13)"></p><blockquote><p>三种策略对比</p></blockquote>]]></content>
       
       
+      <categories>
+          
+          <category> 数据库内核开发 </category>
+          
+      </categories>
+      
       
         <tags>
             
@@ -1463,9 +1531,9 @@
       
         <tags>
             
-            <tag> 项目实战 </tag>
-            
             <tag> SpringBoot入门 </tag>
+            
+            <tag> 项目实战 </tag>
             
         </tags>
       
@@ -1505,9 +1573,9 @@
             
             <tag> 学习笔记 </tag>
             
-            <tag> SpringBoot入门 </tag>
-            
             <tag> java </tag>
+            
+            <tag> SpringBoot入门 </tag>
             
         </tags>
       
@@ -1534,9 +1602,9 @@
             
             <tag> 学习笔记 </tag>
             
-            <tag> SpringBoot入门 </tag>
-            
             <tag> java </tag>
+            
+            <tag> SpringBoot入门 </tag>
             
         </tags>
       
