@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>策略模式</title>
+      <link href="/2024/04/25/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2024/04/25/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<h1 id="何为策略模式"><a href="#何为策略模式" class="headerlink" title="何为策略模式"></a>何为策略模式</h1><p>策略模式让一个类的内部算法或者行为可以在运行改变，从而适应多种环境下的调用。</p><p>举个例子：</p><p>市面上有一种可以更换不同刀头的螺丝刀，当我们在使用这种螺丝刀时，只需要根据螺帽的样式选择合适的刀口，就能直接使用，同样的，如果要替换螺丝刀的样式，比如从一字刀口变成梅花刀口，直接从备用刀头中选择梅花型的。</p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404251724421.jpg" style="zoom: 33%;" /><p><strong>策略模式包含以下几个核心实现：</strong></p><ul><li>环境（Context）：维护一个对策略对象的引用，负责将客户端请求委派给具体的策略对象执行。环境类可以通过依赖注入、简单工厂（工厂加策略）等方式来获取具体策略对象。</li><li>抽象策略（Abstract Strategy）：定义了策略对象的公共接口或抽象类，规定了具体策略类必须实现的方法。</li><li>具体策略（Concrete Strategy）：实现了抽象策略定义的接口或抽象类，包含了具体的算法实现。</li></ul><p>策略模式通过将算法与使用算法的代码解耦，提供了一种动态选择不同算法的方法。客户端代码不需要知道具体的算法细节，而是通过调用环境类来使用所选择的策略。</p><h1 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h1><p>策略模式通常用于有多个类似行为的算法逻辑场景，很常见的一种就是支付方式，当我们网购付款时可以选择微信支付，支付宝支付，或者花呗支付等，这三种支付就是我们刚刚说的有类似行为的场景，策略模式的使用最明显的优点就是可以省去很多if-else结构，让我们的代码更简洁。</p><h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="抽象策略（Abstract-Strategy）："><a href="#抽象策略（Abstract-Strategy）：" class="headerlink" title="抽象策略（Abstract Strategy）："></a>抽象策略（Abstract Strategy）：</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252135900.png" alt="image-20240425213555839"></p><h2 id="具体策略（Concrete-Strategy）："><a href="#具体策略（Concrete-Strategy）：" class="headerlink" title="具体策略（Concrete Strategy）："></a>具体策略（Concrete Strategy）：</h2><p>微信支付：</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252136959.png" alt="image-20240425213652912"></p><p>支付宝支付：<br><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252137211.png" alt="image-20240425213747173"></p><p>花呗支付：</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252138084.png" alt="image-20240425213805045"></p><h2 id="环境（Context）："><a href="#环境（Context）：" class="headerlink" title="环境（Context）："></a>环境（Context）：</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252138246.png" alt="image-20240425213853189"></p><h2 id="Main方法"><a href="#Main方法" class="headerlink" title="Main方法"></a>Main方法</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252139284.png" alt="image-20240425213935235"></p><h2 id="执行结果："><a href="#执行结果：" class="headerlink" title="执行结果："></a>执行结果：</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252140633.png" alt="image-20240425214004604"></p><h1 id="工厂加策略"><a href="#工厂加策略" class="headerlink" title="工厂加策略"></a>工厂加策略</h1><p>单纯的策略模式仍然存在不方便的地方，程序员要根据自己的判断，在写代码时new出自己想要的策略：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">PayContext</span> <span class="variable">wechatContext</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PayContext</span>(<span class="keyword">new</span> <span class="title class_">WeChatConStrategy</span>());</span><br></pre></td></tr></table></figure><p>如果能让程序自己选择使用哪个策略，这样是不是更能体现出策略模式带来的好处，于是就有了经典的工厂加策略（代码来自我的工厂设计模式讲解笔记）：</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252146497.png" alt="image-20240425214656462"></p><p>可以看到在创建策略时，我传入了一个type，我的工厂就能根据type，选择对应的策略。</p><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202404252149697.png" alt="image-20240425214918644"></p><p>选择策略的关键在于工厂类中的hashmap，他能根据传入的type，找到相应的策略，这种工厂模式加策略模式相结合的方式，在我们之后的敲码过程中会很常见。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过策略设计模式的使⽤可以把我们⽅法中的if语句优化掉，⼤量的if语句使⽤会让代码难以扩 展，也不好维护，同时在后期遇到各种问题也很难维护。在使⽤这样的设计模式后可以很好的满⾜ 隔离性与和扩展性，对于不断新增的需求也⾮常⽅便承接。</p><blockquote><p>所有设计模式源码已上传至gitee，地址：<a href="https://gitee.com/linfeng-show/design_pattern_-master">https://gitee.com/linfeng-show/design_pattern_-master</a></p></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+            <tag> 策略模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>单例模式</title>
       <link href="/2024/04/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
       <url>/2024/04/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
