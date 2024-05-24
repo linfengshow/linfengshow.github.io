@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>建造者模式</title>
+      <link href="/2024/05/24/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2024/05/24/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>关注微信公众号：程序驴，获取更多学习资料</p></blockquote><h1 id="何为建造者模式"><a href="#何为建造者模式" class="headerlink" title="何为建造者模式"></a>何为建造者模式</h1><p>建造者模式一般用于构建一个由多个简单对象构成的复杂对象。比如一台完整的汽车对象，其中可能需要：</p><ul><li>车体框架对象</li><li>车门对象</li><li>车窗对象</li><li>发动机对象</li><li>……</li></ul><p>其实不同的汽车品牌，他用到的某个部件可能是来自不同的厂家，但是汽车的构造过程是大差不差的，也就是同样的构造模式可以创建不同的对象。如果构造汽车这一过程完全由人操控，在程序中体现就是你需要写很多的set方法（例如下面这样）</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Car</span> <span class="variable">mycar</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Car</span>();</span><br><span class="line">mycar.setBody(<span class="string">&quot;钛合金进口车架&quot;</span>);</span><br><span class="line">mycar.setDoor(<span class="string">&quot;防弹车门&quot;</span>);</span><br><span class="line">mycar.setEngine(<span class="string">&quot;双瓦轮增压发动机&quot;</span>)</span><br><span class="line"><span class="comment">// ............    </span></span><br></pre></td></tr></table></figure><p>最终才能得到一种汽车，而建造者模式简化了这一过程，建造者模式对某一种特定的复杂对象提供了专门构造他的Builder方法，该Builder方法类似于将所有set方法进行了单独的封装，使得Builder方法最终可以直接提供出我们需要的那一种汽车，比如下面：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Class mycarBuilder <span class="keyword">extends</span> <span class="title class_">carBuilder</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildBody</span><span class="params">()</span>&#123;</span><br><span class="line">        mycar.setBody(<span class="string">&quot;钛合金进口车架&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildDoor</span><span class="params">()</span>&#123;</span><br><span class="line">      mycar.setDoor(<span class="string">&quot;防弹车门&quot;</span>);  </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">buildEngine</span><span class="params">()</span>&#123;</span><br><span class="line">       mycar.setEngine(<span class="string">&quot;双瓦轮增压发动机&quot;</span>) </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> Car <span class="title function_">getCar</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mycar;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="实战案例"><a href="#实战案例" class="headerlink" title="实战案例"></a>实战案例</h1><p>汽车对我们有点遥远，我们拿平时吃快餐这件事做例子：快餐店通常会提供多种多样的套餐，一份套餐通常会包含主食、小吃、饮品，算是一个复杂对象，不同的食物搭配组成不同的套餐。</p><h2 id="套餐类"><a href="#套餐类" class="headerlink" title="套餐类"></a>套餐类</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241714739.png" alt="image-20240524171408663"></p><p>偷懒直接用String了，实际还应该设计主食类，小吃类，饮品类等。</p><h2 id="套餐构建抽象类"><a href="#套餐构建抽象类" class="headerlink" title="套餐构建抽象类"></a>套餐构建抽象类</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241715973.png" alt="image-20240524171552919"></p><h2 id="A套餐Builder"><a href="#A套餐Builder" class="headerlink" title="A套餐Builder"></a>A套餐Builder</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241716422.png" alt="image-20240524171636367"></p><h2 id="B套餐Builder"><a href="#B套餐Builder" class="headerlink" title="B套餐Builder"></a>B套餐Builder</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241717793.png" alt="image-20240524171727737"></p><p>两种建造者会直接返回对应的套餐类型</p><h2 id="套餐指挥类"><a href="#套餐指挥类" class="headerlink" title="套餐指挥类"></a>套餐指挥类</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241719317.png" alt="image-20240524171900267"></p><p>通过传入的建造者类型，获得对应对象。</p><h2 id="BuilderMain"><a href="#BuilderMain" class="headerlink" title="BuilderMain"></a>BuilderMain</h2><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241720148.png" alt="image-20240524172002094"></p><h1 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h1><p><img src="https://lf-pictures.oss-cn-beijing.aliyuncs.com/img1/202405241720489.png" alt="image-20240524172023450"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+            <tag> 建造者模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>策略模式</title>
       <link href="/2024/04/25/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/"/>
       <url>/2024/04/25/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</url>
@@ -419,9 +446,9 @@
       
         <tags>
             
-            <tag> Docker </tag>
-            
             <tag> 学习笔记 </tag>
+            
+            <tag> Docker </tag>
             
         </tags>
       
@@ -1668,9 +1695,9 @@
       
         <tags>
             
-            <tag> 项目实战 </tag>
-            
             <tag> SpringBoot入门 </tag>
+            
+            <tag> 项目实战 </tag>
             
         </tags>
       
@@ -1710,9 +1737,9 @@
             
             <tag> 学习笔记 </tag>
             
-            <tag> SpringBoot入门 </tag>
-            
             <tag> java </tag>
+            
+            <tag> SpringBoot入门 </tag>
             
         </tags>
       
@@ -1739,9 +1766,9 @@
             
             <tag> 学习笔记 </tag>
             
-            <tag> SpringBoot入门 </tag>
-            
             <tag> java </tag>
+            
+            <tag> SpringBoot入门 </tag>
             
         </tags>
       
